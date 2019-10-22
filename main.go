@@ -29,20 +29,21 @@ func main() {
 		np := os.Getenv(ENV_GO_PROXY)
 		np = "git.cloud2go.cn"
 		flag := strings.Contains(k, np)
+		fmt.Println()
 		fmt.Println(flag)
 		if true {
 			pkg := fmt.Sprintf("%s@%s", k, v)
 			fmt.Printf("go get -insecure %v", pkg)
-			envCmd := cmd.NewCmd("go", "get", "-insecure", pkg)
-
+			envCmd := cmd.NewCmd("go", "get", "-u", "-v", "-insecure", pkg)
+			//envCmd = cmd.NewCmd("go", "get", "-u", "-v", "-insecure", "git.cloud2go.cn/rd/orchor@v1.4.12")
 			// Run and wait for Cmd to return Status
 			gms := <-envCmd.Start()
-			for _, gm := range gms.Stdout {
+			for _, gm := range gms.Stderr {
 				fmt.Println(gm)
 			}
 		}
 	}
-	/*gb := cmd.NewCmd("go", "build")
+/*	gb := cmd.NewCmd("go", "build")
 
 	// Run and wait for Cmd to return Status
 	gbs := <-gb.Start()
