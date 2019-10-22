@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/go-cmd/cmd"
+	"github.com/sirkon/goproxy/gomod"
+	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -12,25 +14,24 @@ const (
 )
 
 func main() {
-	// Create Cmd, buffered output
-	envCmd := cmd.NewCmd("go", "list", "-m", "all")
+	input, err := ioutil.ReadFile("go.mod")
+	if err != nil {
 
-	// Run and wait for Cmd to return Status
-	status := <-envCmd.Start()
-
+	}
+	got, err := gomod.Parse("go.mod", input)
+	fmt.Println(got)
+	if err != nil {
+		fmt.Println("go mod parse err ")
+		return
+	}
 	// Print each line of STDOUT from Cmd
-	for _, line := range status.Stdout {
+	for k, v := range got.Require {
 		np := os.Getenv(ENV_GO_PROXY)
 		np = "git.cloud2go.cn"
-		flag := strings.Contains(line, np)
+		flag := strings.Contains(k, np)
 		fmt.Println(flag)
 		if true {
-			ps := strings.Split(line, " ")
-			fmt.Println(ps)
-			pkg := ""
-			if len(ps) == 2 {
-				pkg = fmt.Sprintf("%s@%s", ps[0], ps[1])
-			}
+			pkg := fmt.Sprintf("%s@%s", k, v)
 			fmt.Printf("go get -insecure %v", pkg)
 			envCmd := cmd.NewCmd("go", "get", "-insecure", pkg)
 
