@@ -41,11 +41,11 @@ func main() {
 			}
 		}
 	}
-	gb := cmd.NewCmd("go", "build")
+	/*gb := cmd.NewCmd("go", "build")
 
 	// Run and wait for Cmd to return Status
 	gbs := <-gb.Start()
 	for _, gs := range gbs.Stdout {
 		fmt.Println(gs)
-	}
+	}*/
 }
